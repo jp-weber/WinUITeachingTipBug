@@ -1,0 +1,74 @@
+﻿<Page
+    x:Class="WinUITeachingTipBug.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:WinUITeachingTipBug"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="using:WinUITeachingTipBug.ViewModel"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Page.Resources>
+        <ResourceDictionary>
+            <Style TargetType="ListViewItem">
+                <Setter Property="Padding" Value="2,16,20,0"/>
+            </Style>
+            
+            <DataTemplate x:Name="TestTemplate" x:DataType="models:TestModel">
+                <UserControl x:Name="Root" 
+                             RightTapped="RightTapped" 
+                             HorizontalAlignment="Stretch"
+                             VerticalAlignment="Stretch"
+                             HorizontalContentAlignment="Stretch"
+                             VerticalContentAlignment="Stretch"
+                             MinWidth="480"
+                             MaxWidth="480">
+                    <UserControl.Resources>
+                        <muxc:TeachingTip 
+                            x:Name="AccountCopyCodeButtonTip"
+                            IsLightDismissEnabled="True"
+                            BorderBrush="{ThemeResource SystemAccentColor}"
+                            Target="{Binding ElementName=Root}"
+                            IsOpen="{x:Bind RightClickOpen, Mode=TwoWay}"
+                            Title="Test"
+                            Subtitle="test">
+                        </muxc:TeachingTip>
+                    </UserControl.Resources>
+                    <Grid HorizontalAlignment="Stretch" Background="DarkBlue" Height="80">
+                        <TextBlock Text="{x:Bind Name}" Foreground="White"/>
+                    </Grid>
+                    <VisualStateManager.VisualStateGroups>
+                        <VisualStateGroup x:Name="WindowStates">
+                            <VisualState x:Name="NarrowState">
+                                <VisualState.StateTriggers>
+                                    <AdaptiveTrigger MinWindowWidth="0" />
+                                </VisualState.StateTriggers>
+                                <!--empty-->
+                            </VisualState>
+                            <VisualState x:Name="MediumState">
+                                <VisualState.StateTriggers>
+                                    <AdaptiveTrigger MinWindowWidth="720" />
+                                </VisualState.StateTriggers>
+                                <!--empty-->
+                            </VisualState>
+                        </VisualStateGroup>
+                    </VisualStateManager.VisualStateGroups>
+                </UserControl>
+            </DataTemplate>
+        </ResourceDictionary>
+    </Page.Resources>
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <ListView 
+            IsItemClickEnabled="False"
+            ItemTemplate="{StaticResource TestTemplate}"
+            ItemsSource="{x:Bind ViewModel.Service.Collection, Mode=OneWay}"/>
+        <Button Grid.Row="1" Click="Button_Click" Content="Navigate to"/>
+    </Grid>
+</Page>
